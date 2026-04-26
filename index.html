@@ -1,48 +1,929 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Your Portfolio</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sumama Sonia — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #050a0f;
+    --bg2: #0b1118;
+    --bg3: #111820;
+    --accent: #00d4aa;
+    --accent2: #0099cc;
+    --accent3: #7c3aed;
+    --text: #e8edf2;
+    --muted: #7a8a99;
+    --border: rgba(0,212,170,0.15);
+    --border2: rgba(255,255,255,0.07);
+    --glow: 0 0 20px rgba(0,212,170,0.15);
+    --mono: 'Space Mono', monospace;
+    --display: 'Syne', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 14px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* Grid overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,170,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,170,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Nav */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 3rem;
+    background: rgba(5,10,15,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border2);
+  }
+
+  .nav-logo {
+    font-family: var(--display);
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--accent);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--accent); }
+
+  /* Sections */
+  section {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 6rem 2rem;
+  }
+
+  /* Hero */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 8rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+
+  .hero-tag {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .hero-tag::before {
+    content: '';
+    width: 40px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  h1 {
+    font-family: var(--display);
+    font-size: clamp(3rem, 8vw, 6.5rem);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-name { color: var(--text); }
+  .hero-accent { color: var(--accent); display: block; }
+
+  .hero-bio {
+    max-width: 540px;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.8;
+    margin-bottom: 2.5rem;
+  }
+
+  .hero-bio span { color: var(--accent); }
+
+  .hero-cta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.75rem;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    border-radius: 3px;
+    transition: all 0.2s;
+    cursor: pointer;
+    border: none;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #050a0f;
+    font-weight: 700;
+  }
+
+  .btn-primary:hover {
+    background: #00efc0;
+    box-shadow: 0 0 30px rgba(0,212,170,0.3);
+    transform: translateY(-1px);
+  }
+
+  .btn-outline {
+    border: 1px solid var(--border);
+    color: var(--accent);
+    background: transparent;
+  }
+
+  .btn-outline:hover {
+    border-color: var(--accent);
+    background: rgba(0,212,170,0.05);
+    transform: translateY(-1px);
+  }
+
+  .hero-status {
+    margin-top: 4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(0,212,170,0.4); }
+    50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(0,212,170,0); }
+  }
+
+  /* Section headers */
+  .section-label {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .section-label::before {
+    content: '';
+    width: 30px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  h2 {
+    font-family: var(--display);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 3rem;
+    color: var(--text);
+  }
+
+  /* About */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  .about-text p {
+    color: var(--muted);
+    margin-bottom: 1.2rem;
+    font-size: 13px;
+    line-height: 1.9;
+  }
+
+  .about-text span { color: var(--text); }
+
+  .about-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .stat-card {
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: 4px;
+    padding: 1.25rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .stat-card:hover {
+    border-color: var(--border);
+    box-shadow: var(--glow);
+  }
+
+  .stat-num {
+    font-family: var(--display);
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 0.4rem;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* Projects */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .project-card {
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: 4px;
+    padding: 1.75rem;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .project-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+
+  .project-card:hover {
+    border-color: var(--border);
+    box-shadow: var(--glow);
+    transform: translateY(-3px);
+  }
+
+  .project-card:hover::before { opacity: 1; }
+
+  .project-type {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+
+  .project-name {
+    font-family: var(--display);
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.01em;
+  }
+
+  .project-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 1.25rem;
+  }
+
+  .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .tag {
+    padding: 3px 10px;
+    background: rgba(0,212,170,0.08);
+    border: 1px solid rgba(0,212,170,0.2);
+    border-radius: 2px;
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+  }
+
+  .project-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 11px;
+    color: var(--accent);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    transition: gap 0.2s;
+  }
+
+  .project-link:hover { gap: 0.7rem; }
+
+  /* Skills */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .skill-group {
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: 4px;
+    padding: 1.5rem;
+    transition: all 0.2s;
+  }
+
+  .skill-group:hover {
+    border-color: var(--border);
+    box-shadow: var(--glow);
+  }
+
+  .skill-group-name {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border2);
+  }
+
+  .skill-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .skill-list li {
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    transition: color 0.2s;
+  }
+
+  .skill-list li:hover { color: var(--text); }
+
+  .skill-list li::before {
+    content: '▸';
+    color: var(--accent);
+    font-size: 10px;
+  }
+
+  /* Certs */
+  .certs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+  }
+
+  .cert-card {
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: 4px;
+    padding: 1.1rem 1.25rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    transition: all 0.2s;
+  }
+
+  .cert-card:hover {
+    border-color: var(--border);
+    background: var(--bg3);
+  }
+
+  .cert-icon {
+    width: 32px;
+    height: 32px;
+    background: rgba(0,212,170,0.1);
+    border: 1px solid rgba(0,212,170,0.2);
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  .cert-name {
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.4;
+    font-weight: 700;
+  }
+
+  .cert-issuer {
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 0.2rem;
+    letter-spacing: 0.05em;
+  }
+
+  /* Open Source */
+  .oss-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .oss-card {
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: 4px;
+    padding: 1.5rem;
+    transition: all 0.2s;
+  }
+
+  .oss-card:hover {
+    border-color: var(--border);
+    box-shadow: var(--glow);
+  }
+
+  .oss-org {
+    font-family: var(--display);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.4rem;
+  }
+
+  .oss-prs {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(0,212,170,0.1);
+    border: 1px solid rgba(0,212,170,0.2);
+    border-radius: 2px;
+    padding: 2px 8px;
+    font-size: 10px;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+    letter-spacing: 0.05em;
+  }
+
+  .oss-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* Contact */
+  #contact {
+    text-align: center;
+  }
+
+  #contact h2 { margin-bottom: 1rem; }
+
+  .contact-sub {
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 2.5rem;
+  }
+
+  .contact-links {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .contact-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border: 1px solid var(--border2);
+    border-radius: 3px;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    transition: all 0.2s;
+  }
+
+  .contact-link:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(0,212,170,0.05);
+  }
+
+  /* Footer */
+  footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 2rem;
+    font-size: 11px;
+    color: var(--muted);
+    border-top: 1px solid var(--border2);
+    letter-spacing: 0.05em;
+  }
+
+  footer span { color: var(--accent); }
+
+  /* Divider */
+  .divider {
+    width: 100%;
+    height: 1px;
+    background: var(--border2);
+    margin: 0;
+  }
+
+  /* Scroll animations */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { gap: 1.2rem; }
+    .nav-links a { font-size: 10px; }
+    section { padding: 4rem 1.5rem; }
+    #hero { padding: 7rem 1.5rem 4rem; }
+    .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .oss-grid { grid-template-columns: 1fr; }
+    h2 { font-size: 2rem; }
+  }
+</style>
 </head>
 <body>
-  <header>
-    <h1>Sumama Sonia</h1>
-    <p>Aspiring Web Designer & Canva Creator</p>
-  </header>
 
-  <section class="about">
-    <h2>About Me</h2>
-    <p>I am a beginner web designer with skills in HTML, CSS, and Canva. I create simple websites, social media designs, and resumes.</p>
-  </section>
+<nav>
+  <a class="nav-logo" href="#hero">SS_</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
 
-  <section class="skills">
-    <h2>Skills</h2>
-    <ul>
-      <li>HTML</li>
-      <li>CSS</li>
-      <li>Canva Design</li>
-    </ul>
-  </section>
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-tag">Software Developer & Open Source Contributor</div>
+  <h1>
+    <span class="hero-name">Sumama</span>
+    <span class="hero-accent">Sonia.</span>
+  </h1>
+  <p class="hero-bio">
+    Undergraduate CS student at <span>University of Agriculture, Faisalabad</span> (6th semester). Building real-world web apps, contributing to open source, and earning certifications from AWS, Oracle, Meta, and more.
+  </p>
+  <div class="hero-cta">
+    <a class="btn btn-primary" href="#projects">View Projects</a>
+    <a class="btn btn-outline" href="#contact">Contact Me</a>
+  </div>
+  <div class="hero-status">
+    <div class="status-dot"></div>
+    Available for internships & opportunities
+  </div>
+</section>
 
-  <section class="projects">
-    <h2>Projects</h2>
-    <ul>
-      <li><a href="https://drive.google.com/" target="_blank">Instagram Post Designs (Canva)</a></li>
-      <li><a href="https://github.com/Sumamasonia/Portfolio-Project" target="_blank">Portfolio Website (HTML/CSS)</a></li>
-      <li><a href="https://drive.google.com/" target="_blank">Resume Design</a></li>
-    </ul>
-  </section>
+<div class="divider"></div>
 
-  <section class="contact">
-    <h2>Contact Me</h2>
-    <p>Email: sumamasonia@gmail.com</p>
-    <p>WhatsApp: +92 3360456284</p>
-  </section>
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-label">01 / About</div>
+  <h2>Who I Am</h2>
+  <div class="about-grid">
+    <div class="about-text fade-in">
+      <p>I'm <span>Sumama Sonia</span>, a 6th-semester undergraduate student at the University of Agriculture, Faisalabad, Pakistan. I'm passionate about building full-stack applications that solve real problems.</p>
+      <p>From crafting <span>LMS platforms</span> with PHP and MySQL to deploying AI-powered tools using <span>Next.js and Google Gemini</span>, I love working across the stack. I also have hands-on experience with data visualization through Tableau.</p>
+      <p>Beyond personal projects, I actively contribute to <span>open source</span> — with merged PRs in FOSSology and Processing. I believe real-world collaboration sharpens skills no classroom can replicate.</p>
+    </div>
+    <div class="about-stats fade-in">
+      <div class="stat-card">
+        <div class="stat-num">3+</div>
+        <div class="stat-label">Merged PRs — FOSSology</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">2</div>
+        <div class="stat-label">Live Projects Built</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">10+</div>
+        <div class="stat-label">Certifications Earned</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">6th</div>
+        <div class="stat-label">Semester, UAF</div>
+      </div>
+    </div>
+  </div>
+</section>
 
-  <footer>
-    <p>© 2025 Sumama Sonia | All rights reserved.</p>
-  </footer>
+<div class="divider"></div>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-label">02 / Projects</div>
+  <h2>What I've Built</h2>
+  <div class="projects-grid">
+
+    <div class="project-card fade-in">
+      <div class="project-type">Web App · Full Stack</div>
+      <div class="project-name">SOPly</div>
+      <p class="project-desc">An AI-powered SOP (Statement of Purpose) generator for university applications. Leverages Google Gemini 2.0 Flash to craft personalized documents. Live and deployed on Vercel with Supabase auth.</p>
+      <div class="project-tags">
+        <span class="tag">Next.js</span>
+        <span class="tag">Tailwind CSS</span>
+        <span class="tag">Supabase</span>
+        <span class="tag">Supabase Auth</span>
+        <span class="tag">Gemini 2.0</span>
+        <span class="tag">Vercel</span>
+      </div>
+      <a class="project-link" href="https://sop-generator-ecru.vercel.app/" target="_blank">
+        View Live &#8594;
+      </a>
+    </div>
+
+    <div class="project-card fade-in">
+      <div class="project-type">Web App · Full Stack</div>
+      <div class="project-name">LMS Platform</div>
+      <p class="project-desc">A fully functional Learning Management System built from scratch. Supports course management, user roles, and content delivery. Developed locally using XAMPP with a PHP backend and MySQL database.</p>
+      <div class="project-tags">
+        <span class="tag">HTML</span>
+        <span class="tag">Tailwind CSS</span>
+        <span class="tag">PHP</span>
+        <span class="tag">MySQL</span>
+        <span class="tag">XAMPP</span>
+      </div>
+    </div>
+
+    <div class="project-card fade-in">
+      <div class="project-type">Data Visualization · Tableau</div>
+      <div class="project-name">Business Analytics Dashboard</div>
+      <p class="project-desc">Interactive dashboard built during the Tata Data Visualisation job simulation on Forage. Visualized complex business datasets with graphs and charts to surface actionable insights for stakeholders.</p>
+      <div class="project-tags">
+        <span class="tag">Tableau</span>
+        <span class="tag">Data Viz</span>
+        <span class="tag">Business Analytics</span>
+        <span class="tag">Forage</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- OPEN SOURCE -->
+<section id="opensource">
+  <div class="section-label">03 / Open Source</div>
+  <h2>OSS Contributions</h2>
+  <div class="oss-grid fade-in">
+    <div class="oss-card">
+      <div class="oss-org">FOSSology</div>
+      <div class="oss-prs">✓ 3 PRs Merged</div>
+      <p class="oss-desc">Contributed multiple improvements to FOSSology, an open source license compliance software toolkit used by major enterprises. All 3 pull requests have been reviewed and merged into the main codebase.</p>
+    </div>
+    <div class="oss-card">
+      <div class="oss-org">Processing</div>
+      <div class="oss-prs">✓ 1 PR Merged · 1 PR Open</div>
+      <p class="oss-desc">Contributing to Processing, the visual programming language and IDE. One pull request merged and another currently under review — actively engaged with the community and codebase.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-label">04 / Skills</div>
+  <h2>Tech Stack</h2>
+  <div class="skills-grid fade-in">
+    <div class="skill-group">
+      <div class="skill-group-name">Frontend</div>
+      <ul class="skill-list">
+        <li>HTML5 / CSS3</li>
+        <li>Tailwind CSS</li>
+        <li>Next.js</li>
+        <li>React</li>
+        <li>Canva (Web Design)</li>
+      </ul>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-name">Backend & DB</div>
+      <ul class="skill-list">
+        <li>PHP</li>
+        <li>MySQL</li>
+        <li>Supabase</li>
+        <li>Supabase Auth</li>
+        <li>XAMPP</li>
+      </ul>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-name">AI & Cloud</div>
+      <ul class="skill-list">
+        <li>Google Gemini 2.0</li>
+        <li>Vercel Deployment</li>
+        <li>Oracle Cloud (AI)</li>
+        <li>AWS (Solutions Arch)</li>
+      </ul>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-name">Data & Tools</div>
+      <ul class="skill-list">
+        <li>Tableau</li>
+        <li>Git / GitHub</li>
+        <li>Python (Scientific)</li>
+        <li>C# (Foundational)</li>
+        <li>Open Source Workflows</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CERTIFICATIONS -->
+<section id="certs">
+  <div class="section-label">05 / Certifications</div>
+  <h2>Credentials</h2>
+  <div class="certs-grid fade-in">
+    <div class="cert-card">
+      <div class="cert-icon">◈</div>
+      <div>
+        <div class="cert-name">McKinsey Forward Program</div>
+        <div class="cert-issuer">McKinsey.org</div>
+      </div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-icon">◈</div>
+      <div>
+        <div class="cert-name">Meta Hacker Cup 2025 — Round 1 Participant</div>
+        <div class="cert-issuer">Meta</div>
+      </div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-icon">◈</div>
+      <div>
+        <div class="cert-name">Gemini Certified University Student</div>
+        <div class="cert-issuer">Google</div>
+      </div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-icon">◈</div>
+      <div>
+        <div class="cert-name">Oracle Cloud Infrastructure 2025 AI Foundations Associate</div>
+        <div class="cert-issuer">Oracle</div>
+      </div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-icon">◈</div>
+      <div>
+        <div class="cert-name">Data Visualisation: Empowering Business with Effective Insights</div>
+        <div class="cert-issuer">Tata / Forage</div>
+      </div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-icon">◈</div>
+      <div>
+        <div class="cert-name">Solutions Architecture Job Simulation</div>
+        <div class="cert-issuer">AWS / Forage</div>
+      </div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-icon">◈</div>
+      <div>
+        <div class="cert-name">Scientific Computing with Python</div>
+        <div class="cert-issuer">freeCodeCamp</div>
+      </div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-icon">◈</div>
+      <div>
+        <div class="cert-name">Foundational C# with Microsoft</div>
+        <div class="cert-issuer">freeCodeCamp</div>
+      </div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-icon">◈</div>
+      <div>
+        <div class="cert-name">Use Canva to Create Desktop & Mobile-friendly Web Pages</div>
+        <div class="cert-issuer">Canva / Coursera</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-label" style="justify-content:center;">06 / Contact</div>
+  <h2>Let's Connect</h2>
+  <p class="contact-sub">Open to internships, collaborations, and interesting projects.<br>Drop a message — I'd love to hear from you.</p>
+  <div class="contact-links">
+    <a class="contact-link" href="mailto:sumamasonia@gmail.com">
+      ✉ Email Me
+    </a>
+    <a class="contact-link" href="https://github.com/Sumamasonia" target="_blank">
+      ⌥ GitHub
+    </a>
+    <a class="contact-link" href="https://linkedin.com/in/sumamasonia" target="_blank">
+      ⊞ LinkedIn
+    </a>
+    <a class="contact-link" href="https://sop-generator-ecru.vercel.app/" target="_blank">
+      ◎ SOPly (Live)
+    </a>
+  </div>
+</section>
+
+<footer>
+  Designed & built by <span>Sumama Sonia</span> · UAF · 2025
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
 </body>
 </html>
